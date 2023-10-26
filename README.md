@@ -1,15 +1,22 @@
 # Capture the flag - Chall CatchemAll
 Write up do chall CatchemAll
+
+Tela inicial:
 ![Dale](https://github.com/dahiwas/ctf_catchemall/blob/main/ImagensCTF/CatchemAll.jpeg)
+
 
 O desafio fornecia apenas a imagem abaixo como base:
 
+
 ![Dale](https://github.com/dahiwas/ctf_catchemall/blob/main/ImagensCTF/FigureCatchemAl.jpeg)
+
 
 Dessa forma, fomos encorajados a assimilar cada pokemon a seu respectivo número na pokedex, por exemplo:
 
-O primeiro pokemon da lista dada é o Kingler, então, buscamos na PokeDex(PokeAgenda) o número que o representa e guardamos seu número
+O primeiro pokemon da lista dada é o Kingler, então, buscamos na PokeDex(PokeAgenda) o número que o representa, e assim, guardamos seu respectivo número.
+
 ![Dale](https://github.com/dahiwas/ctf_catchemall/blob/main/ImagensCTF/Pokedex.png)
+
 E fizemos com todos os pokemons do que nos foi fornecido. Chegando na seguinte lista:
 
 ```
@@ -48,11 +55,11 @@ caracteres = ''.join([chr(int(numero)) for linha in linhas for numero in linha.s
 print(caracteres)
 ~
 ```
-Dá uma saída:
+Resultou na saída:
 ```
 cHJpbnQoIlUyRnNkR1ZrWDE4YSsxUElhajVVRlJnYW5QT0pRVm93akIra0JBT0dMTzJpV0dRUCsvSXJxdGZRaHgxSFZwSWMiKQo=
 ```
-Certo, agora vemos que é uma cifra de base64, o convertemos para UTF-8 com o seguinte código:
+Certo, percebemos que é uma cifra de base64, então, o convertemos para UTF-8 com o seguinte código:
 
 ```
 #Python - Conversão BASE64 - UTF-8
@@ -76,14 +83,15 @@ Se fizermos uma dupla conversão, ou seja, se convertermos 'U2FsdGVkX18a+1PIaj5U
 ```
 Salted__ыSИj>Tњу‰AZ0Њ¤†,нўXdыт+ЄЧР‡GV’)'
 ```
-Pesquisando um pouco acerca, descobrimos em: https://asecuritysite.com/symmetric/aes_python, que esse salted é um tipo de criptografia e que seria possível utilizar a biblioteca openssl para decodificar, além disso, um dos parâmetros para se utilizar a decodificação por essa biblioteca, é a utilização de uma key, senha.
+Pesquisando um pouco acerca, vimos em: https://asecuritysite.com/symmetric/aes_python, que esse salted é resultante de um tipo de criptografia e que seria possível utilizar a biblioteca openssl para o decodificar. Além disso, um dos parâmetros para a decodificação dessa biblioteca, é a utilização de uma key, senha.
 
-A descrição inicial do challenge dizia: 'Pokemon is the asnwer for everything', e portanto, colocamos a palavra 'pokemon' como password do código.
+A descrição inicial do challenge dizia: 'Pokemon is the answer for everything', e portanto, colocamos a palavra 'pokemon' como password do código.
+
 Por fim, colocamos 'U2FsdGVkX18a+1PIaj5UFRganPOJQVowjB+kBAOGLO2iWGQP+/IrqtfQhx1HVpIc' em um arquivo txt chamado cipherSecret.txt e rodamos o seguinte o código:
 ```
 $ openssl aes-256-cbc -d -a -pass pass:pokemon -in cipherSecret.txt
 ```
-E temos como resultado a flag que buscavamos:
+E tivemos como resultado a flag que buscavamos:
 ```
 *** WARNING : deprecated key derivation used.
 Using -iter or -pbkdf2 would be better.
